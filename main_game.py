@@ -27,6 +27,7 @@ snd_dir = path.join(path.dirname(__file__), 'game_files')
 
 ##############################################################################
 def conversor_buffer(texto_coordenadas):
+
     coordenadas_separadas = texto_coordenadas.split(", ")
 
     coordenada_0 = coordenadas_separadas[0].split("[")
@@ -75,10 +76,16 @@ class Players(pygame.sprite.Sprite):
 
         self.rect.bottom = HEIGHT / 2  # Posiciona objeto na parte inferior em y
 
-        self.speedy = 0
 
     def update(self):
-        self.rect.y += self.speedy
+        buf = connection.recv(12) #########################
+        buf = str(buf)
+        j1, j2 = conversor_buffer(buf)
+        player1.speedy = j1
+        player2.speedy = j2
+        # print(j1, j2)
+        buf = 0 ######################################
+
         if self.rect.bottom > HEIGHT:
             self.rect.bottom = HEIGHT
         if self.rect.top < 0:
@@ -185,11 +192,14 @@ goal_icon = GoalIcon()
 
 estado = 1
 
+connection, address = serversocket.accept()
+
 try:
     pygame.mixer.music.play(loops=-1)  # Coloca música no jogo
     running = True
 
     while running:
+
         clock.tick(FPS)
 
         if estado == 1:  # inicio do jogo
@@ -207,23 +217,10 @@ try:
             estado = 2
 
         elif estado == 2:  # jogo em si
-
+            all_sprites.update()
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     running = False
-
-            while running:
-                connection, address = serversocket.accept()
-
-                while True:
-                    buf = connection.recv(12)
-                    buf = str(buf)
-                    j1, j2 = conversor_buffer(buf)
-                    player1.speedy = j1
-                    player2.speedy = j2
-                    buf = 0
-
-            all_sprites.update()
 
             if player1.rect.colliderect(ball):
                 ball.speedx = random.randrange(7, 12)
@@ -263,9 +260,9 @@ try:
 
                 pygame.display.flip()
 
-            if score_player1 == 5:
+            if score_player1 == 10000:
                 estado = 3.1
-            elif score_player2 == 5:
+            elif score_player2 == 10000:
                 estado = 3.2
 
         elif estado == 3.1 or estado == 3.2:
@@ -286,7 +283,7 @@ try:
             all_sprites.draw(screen)
             draw_text(screen, str(score_player2), 60, 65, 20)
             draw_text(screen, str(score_player1), 60, 1085, 25)
-
+        
         elif estado == 3.1:
             screen.fill(BLACK)
             screen.blit(background3_1, background3_1_rect)
