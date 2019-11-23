@@ -121,3 +121,32 @@ class GoalIcon(pygame.sprite.Sprite):
 
     def update(self):
         self.rect.x += self.speedx            
+
+        
+pygame.init()
+pygame.mixer.init()
+
+# Tamanho da tela.
+screen = pygame.display.set_mode((WIDTH, HEIGHT))
+
+# Nome do jogo
+pygame.display.set_caption("FutPong")
+
+# Variável para o ajuste de velocidade
+clock = pygame.time.Clock()
+
+pygame.mixer_music.load(path.join(snd_dir, 'Skank-É uma Partida de Futebol.mp3'))
+pygame.mixer_music.set_volume(1)
+goal_sound = pygame.mixer.Sound(path.join(snd_dir, 'Goal Sound.wav'))
+
+score_player1 = 0
+score_player2 = 0
+
+background1 = pygame.image.load(path.join(img_dir, 'intro.png')).convert()
+background1_rect = background1.get_rect()
+background2 = pygame.image.load(path.join(img_dir, 'campo.jpg')).convert()
+background2_rect = background2.get_rect()
+background3_1 = pygame.image.load(path.join(img_dir, 'vp1.png')).convert()
+background3_1_rect = background2.get_rect()
+background3_2 = pygame.image.load(path.join(img_dir, 'vp2.png')).convert()
+background3_2_rect = background2.get_rect()        
