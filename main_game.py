@@ -224,3 +224,35 @@ try:
                 score_player2 += 1
                 clock.tick(100)
                 ball.reset()
+            
+            # colidir a bola com a trave e a linha de fundo
+            if 125 <= ball.rect.x <= 133 and 0 <= ball.rect.y <= 137:
+                ball.speedx = -ball.speedx
+            if 125 <= ball.rect.x <= 133 and 515 <= ball.rect.y <= 654:
+                ball.speedx = -ball.speedx
+
+            if 1014 <= ball.rect.x <= 1025 and 0 <= ball.rect.y <= 141:
+                ball.speedx = -ball.speedx
+            if 1014 <= ball.rect.x <= 1025 and 515 <= ball.rect.y <= 654:
+                ball.speedx = -ball.speedx
+
+                pygame.display.flip()
+
+            if score_player1 == 1:
+                estado = 3.1
+            elif score_player2 == 1:
+                estado = 3.2
+
+        elif estado == 3.1:
+            for e31 in pygame.event.get():
+                if e31.type == pygame.QUIT:
+                    running = False
+                elif e31 == pygame.KEYDOWN:
+                    estado = 1
+
+        elif estado == 3.2:
+            for e32 in pygame.event.get():
+                if e32.type == pygame.QUIT:
+                    running = False
+                elif e32 == pygame.KEYDOWN:
+                    estado = 1
