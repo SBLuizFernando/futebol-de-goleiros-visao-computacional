@@ -150,3 +150,26 @@ background3_1 = pygame.image.load(path.join(img_dir, 'vp1.png')).convert()
 background3_1_rect = background2.get_rect()
 background3_2 = pygame.image.load(path.join(img_dir, 'vp2.png')).convert()
 background3_2_rect = background2.get_rect()        
+
+# Coloca jogadores no jogo
+all_sprites = pygame.sprite.Group()
+player1 = Players("esquerda")
+player2 = Players("direita")
+ball = Ball()
+goal_icon = GoalIcon()
+
+estado = 1
+
+try:
+    pygame.mixer.music.play(loops=-1)  # Coloca música no jogo
+    running = True
+
+    while running:
+        clock.tick(FPS)
+
+        if estado == 1: # inicio do jogo
+            for evento in pygame.event.get():
+                if evento.type == pygame.QUIT:
+                    running = False
+                elif evento.type == pygame.KEYUP:
+                    estado = 1.5
