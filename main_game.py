@@ -199,3 +199,28 @@ try:
                     player2.speedy = 0
 
             all_sprites.update()
+            
+                        if player1.rect.colliderect(ball):
+                ball.speedx = random.randrange(7, 12)
+                ball.speedy = random.randrange(-12, 12)
+
+            if player2.rect.colliderect(ball):
+                ball.speedx = random.randrange(-12, -7)
+                ball.speedy = random.randrange(-12, 12)
+
+            # Detect gol from player 1
+            if ball.rect.x < 85 and 138 < ball.rect.y < 509:
+                all_sprites.add(goal_icon)
+                goal_icon.reset()
+                score_player1 += 1
+                goal_sound.play()
+                clock.tick(100)
+                ball.reset()
+            # Detect gol from player 2
+            if ball.rect.x > 1024 and 142 < ball.rect.y < 514:
+                all_sprites.add(goal_icon)
+                goal_icon.reset()
+                goal_sound.play()
+                score_player2 += 1
+                clock.tick(100)
+                ball.reset()
