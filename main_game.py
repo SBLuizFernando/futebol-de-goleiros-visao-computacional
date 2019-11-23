@@ -58,3 +58,44 @@ def draw_text(surf, text, size, x, y):
             self.rect.bottom = HEIGHT
         if self.rect.top < 0:
             self.rect.top = 0
+
+            
+class Ball(pygame.sprite.Sprite):
+    def __init__(self):
+        pygame.sprite.Sprite.__init__(self)
+
+        ball = pygame.image.load(path.join(img_dir, 'ball.png'))  # Define imagem do Player
+        self.image = ball  # Coloca imagem do Player
+
+        self.image = pygame.transform.scale(ball, (40, 40))  # Define Proporções
+        self.image.set_colorkey(BLACK)  # Deixa Transparente
+        self.rect = self.image.get_rect()  # Obtem detalhes da posição
+
+        self.radius = 20
+
+        self.rect.x = 0
+        self.rect.y = 0
+
+        self.speedx = 0
+        self.speedy = 0
+
+        self.reset()
+
+    def reset(self):
+        self.rect.x = WIDTH / 2  # Posiciona no centro em x
+        self.rect.y = HEIGHT / 2  # Posiciona objeto no centro em y
+        self.speedx = random.choice([-5, 5])
+        self.speedy = random.randrange(-5, 5)
+
+    def update(self):
+        self.rect.x += self.speedx
+        self.rect.y += self.speedy
+
+        if self.rect.right > WIDTH:
+            self.speedx = -8
+        if self.rect.left < 0:
+            self.speedx = 8
+        if self.rect.top > HEIGHT:
+            self.speedy = -8
+        if self.rect.bottom < 0:
+            self.speedy = 8            
