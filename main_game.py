@@ -17,3 +17,11 @@ FPS = 60
 img_dir = path.join(path.dirname(__file__), 'game_files')
 # Estabelece a pasta que contem os sons.
 snd_dir = path.join(path.dirname(__file__), 'game_files')
+
+
+def draw_text(surf, text, size, x, y):
+    font = pygame.font.Font(font_name, size)
+    text_surface = font.render(text, True, WHITE)
+    text_rect = text_surface.get_rect()
+    text_rect.midtop = (x, y)
+    surf.blit(text_surface, text_rect)
