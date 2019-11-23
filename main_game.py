@@ -1,7 +1,13 @@
 import pygame
 import random
 from os import path
+import socket
 
+#############################################################################
+serversocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+serversocket.bind(('localhost', 8089))
+serversocket.listen(5)  # become a server socket, maximum 5 connections
+#############################################################################
 
 font_name = pygame.font.match_font('arial')
 WHITE = (255, 255, 255)
@@ -19,15 +25,34 @@ img_dir = path.join(path.dirname(__file__), 'game_files')
 snd_dir = path.join(path.dirname(__file__), 'game_files')
 
 
+##############################################################################
+def conversor_buffer(texto_coordenadas):
+    coordenadas_separadas = texto_coordenadas.split(", ")
+
+    coordenada_0 = coordenadas_separadas[0].split("[")
+    coordenada_j1 = coordenada_0[1]
+
+    coordenada_1 = coordenadas_separadas[1].split("]")
+    coordenada_j2 = coordenada_1[0]
+
+    coordenada_j1 = int(coordenada_j1)
+
+    coordenada_j2 = int(coordenada_j2)
+
+    return coordenada_j1, coordenada_j2
+
+
+###############################################################################
+
 def draw_text(surf, text, size, x, y):
     font = pygame.font.Font(font_name, size)
     text_surface = font.render(text, True, WHITE)
     text_rect = text_surface.get_rect()
     text_rect.midtop = (x, y)
     surf.blit(text_surface, text_rect)
-    
 
-    class Players(pygame.sprite.Sprite):
+
+class Players(pygame.sprite.Sprite):
     def __init__(self, posicao):
         pygame.sprite.Sprite.__init__(self)
         player1_img = pygame.image.load(path.join(img_dir, 'luva_player_1.png'))  # Define imagem do Player1
@@ -59,7 +84,7 @@ def draw_text(surf, text, size, x, y):
         if self.rect.top < 0:
             self.rect.top = 0
 
-            
+
 class Ball(pygame.sprite.Sprite):
     def __init__(self):
         pygame.sprite.Sprite.__init__(self)
@@ -98,9 +123,9 @@ class Ball(pygame.sprite.Sprite):
         if self.rect.top > HEIGHT:
             self.speedy = -8
         if self.rect.bottom < 0:
-            self.speedy = 8            
+            self.speedy = 8
 
-            
+
 class GoalIcon(pygame.sprite.Sprite):
     def __init__(self):
         pygame.sprite.Sprite.__init__(self)
@@ -120,9 +145,9 @@ class GoalIcon(pygame.sprite.Sprite):
         self.speedx = 15
 
     def update(self):
-        self.rect.x += self.speedx            
+        self.rect.x += self.speedx
 
-        
+
 pygame.init()
 pygame.mixer.init()
 
@@ -149,7 +174,7 @@ background2_rect = background2.get_rect()
 background3_1 = pygame.image.load(path.join(img_dir, 'vp1.png')).convert()
 background3_1_rect = background2.get_rect()
 background3_2 = pygame.image.load(path.join(img_dir, 'vp2.png')).convert()
-background3_2_rect = background2.get_rect()        
+background3_2_rect = background2.get_rect()
 
 # Coloca jogadores no jogo
 all_sprites = pygame.sprite.Group()
@@ -167,40 +192,40 @@ try:
     while running:
         clock.tick(FPS)
 
-        if estado == 1: # inicio do jogo
+        if estado == 1:  # inicio do jogo
             for evento in pygame.event.get():
                 if evento.type == pygame.QUIT:
                     running = False
                 elif evento.type == pygame.KEYUP:
-                    estado = 1.5
-                elif estado == 1.5:  # jogo em si
+                    if evento.key == pygame.K_SPACE:
+                        estado = 1.5
+
+        elif estado == 1.5:  # jogo em si
             all_sprites.add(player1)
             all_sprites.add(player2)
             all_sprites.add(ball)
             estado = 2
 
-        elif estado == 2: # jogo em si
+        elif estado == 2:  # jogo em si
 
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     running = False
-                elif event.type == pygame.KEYDOWN:
-                    if event.key == pygame.K_w:
-                        player1.speedy = -10
-                    elif event.key == pygame.K_s:
-                        player1.speedy = 10
-                    elif event.key == pygame.K_UP:
-                        player2.speedy = -10
-                    elif event.key == pygame.K_DOWN:
-                        player2.speedy = 10
 
-                elif event.type == pygame.KEYUP:
-                    player1.speedy = 0
-                    player2.speedy = 0
+            while running:
+                connection, address = serversocket.accept()
+
+                while True:
+                    buf = connection.recv(12)
+                    buf = str(buf)
+                    j1, j2 = conversor_buffer(buf)
+                    player1.speedy = j1
+                    player2.speedy = j2
+                    buf = 0
 
             all_sprites.update()
-            
-                        if player1.rect.colliderect(ball):
+
+            if player1.rect.colliderect(ball):
                 ball.speedx = random.randrange(7, 12)
                 ball.speedy = random.randrange(-12, 12)
 
@@ -224,7 +249,7 @@ try:
                 score_player2 += 1
                 clock.tick(100)
                 ball.reset()
-            
+
             # colidir a bola com a trave e a linha de fundo
             if 125 <= ball.rect.x <= 133 and 0 <= ball.rect.y <= 137:
                 ball.speedx = -ball.speedx
@@ -238,25 +263,18 @@ try:
 
                 pygame.display.flip()
 
-            if score_player1 == 1:
+            if score_player1 == 5:
                 estado = 3.1
-            elif score_player2 == 1:
+            elif score_player2 == 5:
                 estado = 3.2
 
-        elif estado == 3.1:
+        elif estado == 3.1 or estado == 3.2:
             for e31 in pygame.event.get():
                 if e31.type == pygame.QUIT:
                     running = False
                 elif e31 == pygame.KEYDOWN:
                     estado = 1
 
-        elif estado == 3.2:
-            for e32 in pygame.event.get():
-                if e32.type == pygame.QUIT:
-                    running = False
-                elif e32 == pygame.KEYDOWN:
-                    estado = 1
-        
         # A cada loop, redesenha o fundo e os sprites
         if estado == 1:
             screen.fill(BLACK)
