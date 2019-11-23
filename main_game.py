@@ -173,3 +173,29 @@ try:
                     running = False
                 elif evento.type == pygame.KEYUP:
                     estado = 1.5
+                elif estado == 1.5:  # jogo em si
+            all_sprites.add(player1)
+            all_sprites.add(player2)
+            all_sprites.add(ball)
+            estado = 2
+
+        elif estado == 2: # jogo em si
+
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    running = False
+                elif event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_w:
+                        player1.speedy = -10
+                    elif event.key == pygame.K_s:
+                        player1.speedy = 10
+                    elif event.key == pygame.K_UP:
+                        player2.speedy = -10
+                    elif event.key == pygame.K_DOWN:
+                        player2.speedy = 10
+
+                elif event.type == pygame.KEYUP:
+                    player1.speedy = 0
+                    player2.speedy = 0
+
+            all_sprites.update()
