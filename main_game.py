@@ -256,3 +256,29 @@ try:
                     running = False
                 elif e32 == pygame.KEYDOWN:
                     estado = 1
+        
+        # A cada loop, redesenha o fundo e os sprites
+        if estado == 1:
+            screen.fill(BLACK)
+            screen.blit(background1, background1_rect)
+
+        elif estado == 2:
+            screen.fill(BLACK)
+            screen.blit(background2, background2_rect)
+            all_sprites.draw(screen)
+            draw_text(screen, str(score_player2), 60, 65, 20)
+            draw_text(screen, str(score_player1), 60, 1085, 25)
+
+        elif estado == 3.1:
+            screen.fill(BLACK)
+            screen.blit(background3_1, background3_1_rect)
+
+        elif estado == 3.2:
+            screen.fill(BLACK)
+            screen.blit(background3_2, background3_2_rect)
+
+        # Depois de desenhar tudo, inverte o display.
+        pygame.display.flip()
+
+finally:
+    pygame.quit()
