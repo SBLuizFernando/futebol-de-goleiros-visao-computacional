@@ -99,3 +99,25 @@ class Ball(pygame.sprite.Sprite):
             self.speedy = -8
         if self.rect.bottom < 0:
             self.speedy = 8            
+
+            
+class GoalIcon(pygame.sprite.Sprite):
+    def __init__(self):
+        pygame.sprite.Sprite.__init__(self)
+        icon_text = pygame.image.load(path.join(img_dir, 'goool_icon.png'))  # Define imagem do Player
+        self.image = icon_text  # Coloca imagem do Player
+        self.image.set_colorkey(BLACK)  # Deixa Transparente
+
+        self.rect = self.image.get_rect()  # Obtem detalhes da posição
+        self.rect.x = 0
+        self.rect.y = 0
+        self.speedx = 0
+        self.reset()
+
+    def reset(self):
+        self.rect.x = 0  # Posiciona no centro em x
+        self.rect.y = 180  # Posiciona objeto no centro em y
+        self.speedx = 15
+
+    def update(self):
+        self.rect.x += self.speedx            
