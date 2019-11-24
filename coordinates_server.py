@@ -166,11 +166,11 @@ def rastreia_circulo(m1Lower, m1Upper, m2Lower, m2Upper, raio_marcador):
         desenha_circulos(frame, xA, yA, rA, cA)
         desenha_circulos(frame, xZ, yZ, rZ, zA)
 
-        print("X1:", xA, " X2:", xZ)
+        print("y1:", yA, " y2:", yZ)
 
         cv2.imshow("Frame", frame)
 
-        return xA, xZ
+        return yA, yZ
 
         if key == 27:
             break
@@ -180,12 +180,12 @@ def rastreia_circulo(m1Lower, m1Upper, m2Lower, m2Upper, raio_marcador):
 
 while True:
 
-    xa, xz= rastreia_circulo(m1Lower, m1Upper, m2Lower, m2Upper, raio_marcador)
+    ya, yz= rastreia_circulo(m1Lower, m1Upper, m2Lower, m2Upper, raio_marcador)
 
-    xa = int(xa)
-    xz = int(xz)
+    ya = int(ya)
+    yz = int(yz)
 
-    lista_coordenadas =[xa, xz]
+    lista_coordenadas =[ya, yz]
 
     coordenadas_texto = str(lista_coordenadas)
 
