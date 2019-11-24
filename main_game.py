@@ -74,18 +74,10 @@ class Players(pygame.sprite.Sprite):
             self.image = pygame.transform.scale(player2_img, (80, 80))  # Define Proporções
             self.rect.centerx = WIDTH - 175  # Posiciona no centro em x
 
-        self.rect.bottom = HEIGHT / 2  # Posiciona objeto na parte inferior em y
+            self.rect.bottom = HEIGHT / 2  # Posiciona objeto na parte inferior em y
 
 
     def update(self):
-        buf = connection.recv(12) #########################
-        buf = str(buf)
-        j1, j2 = conversor_buffer(buf)
-        player1.speedy = j1
-        player2.speedy = j2
-        # print(j1, j2)
-        buf = 0 ######################################
-
         if self.rect.bottom > HEIGHT:
             self.rect.bottom = HEIGHT
         if self.rect.top < 0:
@@ -217,18 +209,25 @@ try:
             estado = 2
 
         elif estado == 2:  # jogo em si
+            buf = connection.recv(12) #########################
+            buf = str(buf)
+            j1, j2 = conversor_buffer(buf)
+            player1.rect.y = j1
+            player2.rect.y = j2
+            print(j1, j2)
+            buf = 0 ######################################
             all_sprites.update()
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     running = False
 
             if player1.rect.colliderect(ball):
-                ball.speedx = random.randrange(7, 12)
-                ball.speedy = random.randrange(-12, 12)
+                ball.speedx = random.randrange(15, 25)
+                ball.speedy = random.randrange(-25, 25)
 
             if player2.rect.colliderect(ball):
-                ball.speedx = random.randrange(-12, -7)
-                ball.speedy = random.randrange(-12, 12)
+                ball.speedx = random.randrange(-25, -15)
+                ball.speedy = random.randrange(-25, 25)
 
             # Detect gol from player 1
             if ball.rect.x < 85 and 138 < ball.rect.y < 509:
@@ -238,6 +237,7 @@ try:
                 goal_sound.play()
                 clock.tick(100)
                 ball.reset()
+
             # Detect gol from player 2
             if ball.rect.x > 1024 and 142 < ball.rect.y < 514:
                 all_sprites.add(goal_icon)
@@ -260,9 +260,9 @@ try:
 
                 pygame.display.flip()
 
-            if score_player1 == 10000:
+            if score_player1 == 5:
                 estado = 3.1
-            elif score_player2 == 10000:
+            elif score_player2 == 5:
                 estado = 3.2
 
         elif estado == 3.1 or estado == 3.2:
