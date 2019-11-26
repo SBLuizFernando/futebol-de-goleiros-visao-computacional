@@ -260,9 +260,9 @@ try:
 
                 pygame.display.flip()
 
-            if score_player1 == 5:
+            if score_player1 == 100:
                 estado = 3.1
-            elif score_player2 == 5:
+            elif score_player2 == 100:
                 estado = 3.2
 
         elif estado == 3.1 or estado == 3.2:

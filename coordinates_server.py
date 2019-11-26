@@ -1,4 +1,6 @@
-#https://towardsdatascience.com/automatic-vision-object-tracking-347af1cc8a3b
+#Basedo nos códigos de: https://towardsdatascience.com/automatic-vision-object-tracking-347af1cc8a3b
+
+#https://stackoverflow.com/questions/56787999/python-opencv-realtime-get-rgb-values-when-mouse-is-clicked
 
 from __future__ import print_function
 from imutils.video import VideoStream
@@ -48,7 +50,7 @@ def retorna_hsv():
     cv2.namedWindow('mouseRGB')
     cv2.setMouseCallback('mouseRGB',mouseRGB)
 
-    capture = cv2.VideoCapture(0, cv2.CAP_DSHOW)
+    capture = cv2.VideoCapture(1, cv2.CAP_DSHOW)
 
     while(True):
 
@@ -61,11 +63,10 @@ def retorna_hsv():
 
         if len(lista_rgb)>2:
 
-            hsv_inferior.append(int((rgb_2_hsv(lista_rgb)-5))) #sensibilidade da detecção da cor
+            hsv_inferior.append(int((rgb_2_hsv(lista_rgb)-15))) #sensibilidade da detecção da cor
             hsv_inferior.append((100))
             hsv_inferior.append((100))
-
-            hsv_superior.append(int((rgb_2_hsv(lista_rgb)+5))) #sensibilidade da detecção da cor
+            hsv_superior.append(int((rgb_2_hsv(lista_rgb)+15))) #sensibilidade da detecção da cor
             hsv_superior.append(255)
             hsv_superior.append(255)
 
@@ -82,7 +83,7 @@ cv2.destroyAllWindows()
 
 # initialize the video stream and allow the camera sensor to warmup
 print("Acessando a webcam...")
-vs = VideoStream(0).start()
+vs = VideoStream(1).start()
 time.sleep(2.0)
 
 frame = vs.read()
